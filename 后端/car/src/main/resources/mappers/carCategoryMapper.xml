@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.dao.carCategoryMapper" >
+    <resultMap id="BaseResultMap" type="com.example.pojo.carCategory" >
+        <constructor >
+            <idArg column="category_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="category_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="category_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        category_id, category_name, category_type, create_time, update_time
+    </sql>
+
+    <select id="selectBycategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM car_category WHERE category_id = #{categoryId}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM car_category
+    </select>
+
+    <insert id="insert" parameterType="com.example.pojo.carCategory" >
+        insert into car_category (category_id, category_name, category_type, create_time, update_time)
+        values (#{categoryId,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR},
+        #{categoryType,jdbcType=INTEGER}, now(),
+        now())
+    </insert>
+
+    <select id="findByCategoryTypeIn" parameterType="list" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM car_category
+        <where>
+            category_type in
+            <foreach collection="categoryTypeList" index="index" item="item" open="(" separator="," close=")" >
+                #{item}
+            </foreach>
+        </where>
+
+    </select>
+</mapper>

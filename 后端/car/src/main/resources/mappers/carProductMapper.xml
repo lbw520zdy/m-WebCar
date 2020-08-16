@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.dao.carProductMapper" >
+    <resultMap id="BaseResultMap" type="com.example.pojo.carProduct" >
+        <constructor >
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="category_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="descrition" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="main_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="detail_image1" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="detail_image2" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="detail_image3" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+            <arg column="stock" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, category_type, descrition, name, main_image, detail_image1, detail_image2, detail_image3, price, stock, status,
+        create_time, update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.example.pojo.carProduct" >
+        insert into car_product (id, category_type, descrition, name,
+        main_image, detail_image1,
+        detail_image2, detail_image3, price, stock,
+        status, create_time, update_time
+        )
+        values (#{id,jdbcType=INTEGER}, #{categoryType,jdbcType=INTEGER}, #{descrition,jdbcType=VARCHAR} , #{name,jdbcType=VARCHAR},
+        #{mainImage,jdbcType=VARCHAR},
+        #{detailImage1,jdbcType=VARCHAR}, #{detailImage2,jdbcType=VARCHAR}, #{detailImage3,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{stock,jdbcType=INTEGER},
+        #{status,jdbcType=INTEGER}, now(), now()
+        )
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from car_product
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.carProduct" >
+        update car_product
+        <set >
+            <if test="categoryType != null" >
+                category_type = #{categoryType,jdbcType=INTEGER},
+            </if>
+            <if test="descrition != null" >
+                descrition = #{descrition,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null" >
+                main_image = #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="detailImage1 != null" >
+                detail_image1 = #{detailImage1,jdbcType=VARCHAR},
+            </if>
+            <if test="detailImage2 != null" >
+                detail_image2 = #{detailImage2,jdbcType=VARCHAR},
+            </if>
+            <if test="detailImage3 != null" >
+                detail_image3 = #{detailImage3,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="stock != null" >
+                stock = #{stock,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.pojo.carProduct" >
+        update mmall_product
+        set category_type = #{categoryType,jdbcType=INTEGER},
+        descrition = #{descrition,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        main_image = #{mainImage,jdbcType=VARCHAR},
+        detail_image1 = #{detailImage1,jdbcType=VARCHAR},
+        detail_image2 = #{detailImage2,jdbcType=VARCHAR},
+        detail_image3 = #{detailImage3,jdbcType=VARCHAR},
+        price = #{price,jdbcType=DECIMAL},
+        stock = #{stock,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = now()
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectByNameAndProductId" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        <where>
+            <if test="productName != null">
+                AND name LIKE #{productName}
+            </if>
+            <if test="productId != null">
+                AND id = #{productId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByCategoryType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        WHERE category_type = #{categoryTye}
+    </select>
+
+    <select id="selectByPriceAsc" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        ORDER BY price ASC
+    </select>
+
+    <select id="selectByPriceDesc" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        ORDER BY price DESC
+    </select>
+    <select id="selectListByOnStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM car_product
+        where status = 1
+    </select>
+</mapper>
